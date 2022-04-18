@@ -367,6 +367,5 @@ void Shopping::receipt() {
 int main() {
     Shopping s;
     s.mainMenu();
-
     return 0;
 }
