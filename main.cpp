@@ -92,9 +92,6 @@ void Shopping ::administrator() {
         }
     }while(admin);
 
-
-
-
 }
 void Shopping ::addProduct() {
     fstream data; //Creat an data object so we can read the file
@@ -367,8 +364,6 @@ void Shopping::receipt() {
     cout << "\n------------------\n" << endl;
     cout << "\nTotal Amount: " << total << endl;
 }
-
-
 int main() {
     Shopping s;
     s.mainMenu();
