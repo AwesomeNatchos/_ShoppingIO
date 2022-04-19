@@ -1,6 +1,6 @@
 #include <iostream>
 #include<fstream>
-#include <stdio.h>
+#include <cstdio>
 using namespace std;
 /*
  * SHOPPING APPLICATION
@@ -13,19 +13,134 @@ private: //default values
     float productDiscount;
     string productName;
 
+    // BANK
+    string userName;
+    float bankBalance=0;
+    float lastBankTransaction=0;
+
 public:
-    //declair the functions, but doesnt write them yet
+    //Shopping
     void mainMenu();
-    void administrator();
     void buyer();
-    void addProduct();
-    void removeProduct();
-    void editProduct();
     void receipt();
     void displayProduct();
 
-};
+    //Admin
+    void administrator();
+    void addProduct();
+    void removeProduct();
+    void editProduct();
+    //Bank
+    void bankMainMenu();
+    void displayBankDetails();
+    void depositIntoAccount();
+    void withdrawFromAccount();
+    void lastTransaction();
 
+    float getLastTransaction(){
+        return lastBankTransaction;
+    }
+
+    void setBankBalance(int enterAmount){
+        bankBalance = enterAmount;
+    }
+
+    float getBankBalance(){
+        return bankBalance;
+    }
+
+    void setUserName(string name){
+        userName = name;
+    }
+
+    string getUserName(){
+        return userName;
+    }
+};
+void Shopping ::displayBankDetails() {
+
+    cout << "------- USER BANK INFO --------" << endl;
+    cout << "User: " << getUserName() << endl;
+    cout << "Balance: " << getBankBalance() << endl;
+    cout << "Last transaction " << getLastTransaction() << endl;
+
+}
+void Shopping ::lastTransaction() {
+    if(lastBankTransaction > 0){
+        cout << "Last transaction was " << lastBankTransaction << endl;
+    }
+    else if(lastBankTransaction < 0){
+        cout << "Last transaction was -" << lastBankTransaction << endl;
+    }
+    else{
+        cout << "You dont have any transactions yet!" << endl;
+    }
+}
+void Shopping ::withdrawFromAccount() {
+    int withdrawAmount;
+    int count = 0;
+    bool withdraw = true;
+    int choice;
+    cout << " --- WITHDRAW ---" << endl;
+    do{
+        cout << "Please enter withdrawAmount amount: ";
+        cin >> withdrawAmount;
+        if(bankBalance >= withdrawAmount){
+            bankBalance -= withdrawAmount;
+            lastBankTransaction = -withdrawAmount;
+            cout << "\nYou have successfully withdrawn " << withdrawAmount << " from your account" << endl;
+            cout << "New balance " << bankBalance << endl;
+            withdraw = false;
+        }
+        else{
+            cout << "Your balance is " << bankBalance << endl;
+            cout << "Please enter a sufficient amount!" << endl;
+            cout << "Press 1 for back to bank main menu or 2. new deposit amount " << endl;
+            cin >> choice;
+            if (choice == 1){
+                withdraw = false; //Back to bank menu
+            }
+            else{
+                continue;
+            }
+        }
+    }while(withdraw);
+}
+void Shopping ::depositIntoAccount() {
+    int deposit;
+    cout << " --- DEPOSIT MONEY --- " << endl;
+    cout << "Please enter amount: ";
+    cin >> deposit;
+    bankBalance += deposit;
+    lastBankTransaction = deposit;
+    cout << "\nYou have successfully deposited " << deposit << " to your account!" << endl;
+    cout << "Your new account balance is: " << bankBalance << endl;
+}
+void Shopping::bankMainMenu() {
+    int choice;
+    bool bank = true;
+    do{
+        cout << "------- BANK MENU------------" << endl;
+        cout << "Options: " << endl;
+        cout << "1. See bank info " << endl;
+        cout << "2. Deposit to account " << endl;
+        cout << "3. Withdraw money " << endl;
+        cout << "4. See last transactions " << endl;
+        cout << "5. Back to main menu" << endl;
+        cin >> choice;
+        switch(choice){
+            case 1: displayBankDetails(); break;
+            case 2: depositIntoAccount(); break;
+            case 3: withdrawFromAccount(); break;
+            case 4: lastTransaction(); break;
+            case 5:
+                cout << "Back to main menu " << endl;
+                bank = false; break;
+            default:
+                cout << "Please enter a valid option!" << endl; break;
+        }
+    }while(bank);
+}
 void Shopping ::mainMenu() {
     int choice;
     int adminPassword = 123;
@@ -36,14 +151,19 @@ void Shopping ::mainMenu() {
     do{
         cout << "----- WELCOME TO AWESOME-SHOPPING -------" << endl;
         cout << "1. Buyer" << endl;
-        cout << "2. Admin" << endl;
-        cout << "3. Exit" << endl;
-        cout << "4. Please enter your option: ";
+        cout << "2. Bank " << endl;
+        cout << "3. Admin" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Please enter your option: ";
         cin >> choice;
         switch(choice){
             case 1:
                 buyer(); break;
             case 2:
+                cout << "cool"<< endl;
+                bankMainMenu();
+                break;
+            case 3:
                 cout << "---- Administrator page -----" << endl;
                 cout << "Log in to continue! " << endl;
                 cout << "UserID: ";
@@ -58,7 +178,7 @@ void Shopping ::mainMenu() {
                     cout << "Invalid userID or Password!" << endl;
                     cout << "Please try again" << endl;
                 } break;
-            case 3:
+            case 4:
                 cout << "Goodbye!" << endl;
                 menu = false; break;  //Exit main menu
             default:
@@ -366,6 +486,8 @@ void Shopping::receipt() {
 }
 int main() {
     Shopping s;
+    s.setUserName("John");
+    s.setBankBalance(500);
     s.mainMenu();
     return 0;
 }
